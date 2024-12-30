@@ -100,7 +100,6 @@ class _AuthScreenState extends State<AuthScreen> {
                       );
                       final Session? session = res.session;
                       final User? user = res.user;
-                      debugPrint("!!!!!!!!!!! ${user?.id}");
                       AutoRouter.of(context).push(const HomeRoute());
                       // ignore: unused_catch_clause, empty_catches
                     } on Exception catch (e) {}
@@ -130,16 +129,6 @@ class _AuthScreenState extends State<AuthScreen> {
                 child: const Text("Зарегистрироваться"),
               ),
               const SizedBox(height: 32.0),
-
-              // Дополнительный текст
-              Center(
-                child: Text(
-                  "Экран аутентификации",
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.hintColor,
-                  ),
-                ),
-              ),
             ],
           ),
         ),

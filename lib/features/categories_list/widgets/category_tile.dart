@@ -25,8 +25,7 @@ class ProductCategoryTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         onTap: () {
           debugPrint("Category id ${category.categoryId}");
-          AutoRouter.of(context)
-              .push(ProductRoute(categoryId: category.categoryId));
+          AutoRouter.of(context).push(ProductRoute(category: category));
         },
         child: Padding(
           padding: const EdgeInsets.all(16),

@@ -15,7 +15,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     try {
       if (state is! ProductLoaded) emit(const ProductLoading());
       final productList =
-          await productsRepository.getProductList(event.categoryId);
+          await productsRepository.getProductList(event.category.categoryId);
       emit(ProductLoaded(productList: productList));
     } catch (e, st) {
       emit(ProductLoadingFailure(exception: e, st: st));

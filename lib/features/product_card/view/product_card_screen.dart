@@ -59,18 +59,15 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Product Image
-                    Container(
-                      height: 250,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            state.product.imageUrl ??
-                                'https://prgbgbhgwpzlvtfvggsj.supabase.co/storage/v1/object/public/images/morioh.jpg', // Заглушка, если нет изображения
-                          ),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                    Row(
+                      children: [
+                        Container(
+                            height: 250,
+                            child: Image.network(
+                              widget.product.imageUrl ??
+                                  'https://prgbgbhgwpzlvtfvggsj.supabase.co/storage/v1/object/public/images/grayimagenotfound.png', // Заглушка, если нет изображения
+                            ))
+                      ],
                     ),
                     const SizedBox(height: 16),
                     // Product Name
@@ -83,38 +80,55 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                     ),
                     const SizedBox(height: 8),
                     // Product Price
-                    Row(
-                      children: [
-                        if (state.product.discount != null) ...[
-                          Text(
-                            '\$${widget.product.priceWithDiscount().toStringAsFixed(2)}',
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.green,
+                    state.product.discount == 0
+                        ? Row(children: [
+                            Text(
+                              '\$${widget.product.price.toStringAsFixed(2)}',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green,
+                              ),
                             ),
+                            const SizedBox(width: 8),
+                          ])
+                        : Row(
+                            children: [
+                              if (state.product.discount != null) ...[
+                                Text(
+                                  '\$${widget.product.priceWithDiscount().toStringAsFixed(2)}',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  '\$${state.product.price}',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey,
+                                    decoration: TextDecoration.lineThrough,
+                                  ),
+                                ),
+                              ] else
+                                Text(
+                                  '\$${state.product.price}',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                            ],
                           ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '\$${state.product.price}',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey,
-                              decoration: TextDecoration.lineThrough,
-                            ),
-                          ),
-                        ] else
-                          Text(
-                            '\$${state.product.price}',
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                      ],
-                    ),
                     const SizedBox(height: 16),
-                    // Product Description
+                    Text(
+                      state.product.description ??
+                          'Описание товара отсутствует.',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+
                     const SizedBox(height: 8),
 
                     state.product.specification != null

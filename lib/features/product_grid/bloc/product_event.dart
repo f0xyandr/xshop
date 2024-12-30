@@ -8,19 +8,9 @@ abstract class ProductEvent extends Equatable {
 }
 
 class LoadProduct extends ProductEvent {
-  const LoadProduct({required this.categoryId});
-  final int categoryId;
+  const LoadProduct({required this.category});
+  final ProductCategory category;
 
   @override
-  List<Object> get props => super.props..add(categoryId);
-}
-
-class LoadFilteredProduct extends ProductEvent {
-  const LoadFilteredProduct({required this.minPrice, required this.maxPrice});
-
-  final double minPrice;
-  final double maxPrice;
-
-  @override
-  List<Object> get props => super.props..addAll([minPrice, maxPrice]);
+  List<Object> get props => super.props..add(category);
 }

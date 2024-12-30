@@ -38,28 +38,34 @@ class ProductTile extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product.name,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge!
-                        .copyWith(fontWeight: FontWeight.bold),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '\$${product.price.toStringAsFixed(2)}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .copyWith(color: Colors.green),
-                  ),
-                ],
-              ),
+              child: product.discount == 0
+                  ? Text(
+                      '\$${product.price.toStringAsFixed(2)}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium!
+                          .copyWith(color: Colors.green),
+                    )
+                  : Column(
+                      children: [
+                        Text(
+                          '\$${product.price.toStringAsFixed(2)}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(
+                                  color: const Color.fromARGB(255, 150, 0, 0),
+                                  decoration: TextDecoration.lineThrough),
+                        ),
+                        Text(
+                          '\$${product.priceWithDiscount().toStringAsFixed(2)}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(color: Colors.green),
+                        ),
+                      ],
+                    ),
             ),
           ],
         ),

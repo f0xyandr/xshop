@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:online_shop/repositories/products/models/product_category.dart';
 
 import '../../../repositories/products/products_repository.dart';
 import '../bloc/product_bloc.dart';
@@ -11,9 +12,9 @@ import '../widgets/product_tile.dart';
 
 @RoutePage()
 class ProductScreen extends StatefulWidget {
-  const ProductScreen({super.key, required this.categoryId});
+  const ProductScreen({super.key, required this.category});
 
-  final int categoryId;
+  final ProductCategory category;
 
   @override
   State<ProductScreen> createState() => _ProductScreenState();
@@ -27,7 +28,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   void initState() {
-    _productBloc.add(LoadProduct(categoryId: widget.categoryId));
+    _productBloc.add(LoadProduct(category: widget.category));
     super.initState();
   }
 
@@ -35,6 +36,11 @@ class _ProductScreenState extends State<ProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          title: Text(
+            widget.category.categoryName,
+            style: const TextStyle(color: Colors.teal, fontSize: 24),
+          ),
+          centerTitle: true,
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,
@@ -44,60 +50,6 @@ class _ProductScreenState extends State<ProductScreen> {
               AutoRouter.of(context).maybePop();
             },
           ),
-          actions: [
-            ElevatedButton(
-                onPressed: () {
-                  showDialog<void>(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Заголовок диалога'),
-                        content: SingleChildScrollView(
-                          child: ListBody(
-                            children: <Widget>[
-                              TextFormField(
-                                controller: _minValue,
-                                decoration: const InputDecoration(
-                                  labelText: 'Name',
-                                  border: OutlineInputBorder(),
-                                ),
-                              ),
-                              TextFormField(
-                                controller: _maxValue,
-                                decoration: const InputDecoration(
-                                  labelText: 'Name',
-                                  border: OutlineInputBorder(),
-                                ),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _productBloc.add(LoadFilteredProduct(
-                                        minPrice: double.parse(_minValue.text),
-                                        maxPrice:
-                                            double.parse(_maxValue.text)));
-                                  });
-                                },
-                                child: const Text(""),
-                              )
-                            ],
-                          ),
-                        ),
-                        actions: <Widget>[
-                          TextButton(
-                            child: const Text('Закрыть'),
-                            onPressed: () {
-                              Navigator.of(context).pop(); // Закрывает диалог
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                child: const Text("data"))
-          ],
         ),
         body: BlocBuilder<ProductBloc, ProductState>(
             bloc: _productBloc,

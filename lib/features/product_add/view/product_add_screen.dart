@@ -24,6 +24,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
   final TextEditingController _specValue = TextEditingController();
 
   final Map<String, String> _specMap = {};
+  bool _isChecked = false;
 
   List<ProductCategory> _categories = [];
   ProductCategory? _selectedCategory;
@@ -60,29 +61,27 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
   }
 
   Future<void> _addProduct() async {
-    if (_priceController.text.isEmpty || _selectedCategory == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text('Please fill all fields and select a category.')),
-      );
-
-      return;
-    }
-    if (int.parse(_discountController.text) > 100) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Discount can\'t be greater than 99%')),
-      );
-      return;
-    }
-
     try {
+      if (_priceController.text.isEmpty || _selectedCategory == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Please fill all fields and select a category.')),
+        );
+
+        return;
+      }
+
+      debugPrint("AAAAAAAAAAAAAAA $_discountController");
       await Supabase.instance.client.from('products').insert({
         'name': _nameController.text,
         'price': int.parse(_priceController.text),
         'user': Supabase.instance.client.auth.currentUser!.id,
         'description': _descriptionController.text,
-        'discount_percent': int.parse(
-            _discountController.text.isEmpty ? '0' : _discountController.text),
+        'discount_percent': _isChecked == true
+            ? 0
+            : int.parse(_discountController.text == null
+                ? '0'
+                : _discountController.text),
         'price_with_discount': (int.parse(_priceController.text) -
             (int.parse(_priceController.text) *
                 int.parse(_discountController.text.isEmpty
@@ -133,7 +132,17 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
         ),
       ),
       body: _categories.isEmpty
-          ? Center(child: CircularProgressIndicator())
+          ? Center(
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: CircularProgressIndicator(),
+                ),
+                Text("Please add categories")
+              ],
+            ))
           : Padding(
               padding: const EdgeInsets.all(16.0),
               child: SingleChildScrollView(
@@ -166,12 +175,31 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                     ),
                     SizedBox(height: 16),
                     TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '0';
+                        }
+
+                        return value; // Если всё в порядке, ошибки нет
+                      },
                       controller: _discountController,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         labelText: 'Discount (%)',
                         border: OutlineInputBorder(),
                       ),
+                    ),
+                    Row(
+                      children: [
+                        Checkbox(
+                            value: _isChecked,
+                            onChanged: (bool? newValue) {
+                              setState(() {
+                                _isChecked = newValue ?? false;
+                              });
+                            }),
+                        Text("Witout discount")
+                      ],
                     ),
                     SizedBox(height: 16),
                     DropdownButtonFormField<ProductCategory>(
@@ -200,7 +228,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                           barrierDismissible: true,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('Заголовок диалога'),
+                              title: Text(''),
                               content: SingleChildScrollView(
                                 child: ListBody(
                                   children: <Widget>[
@@ -214,7 +242,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                                     TextFormField(
                                       controller: _specValue,
                                       decoration: InputDecoration(
-                                        labelText: 'Name',
+                                        labelText: 'content',
                                         border: OutlineInputBorder(),
                                       ),
                                     ),
@@ -231,7 +259,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                               ),
                               actions: <Widget>[
                                 TextButton(
-                                  child: Text('Закрыть'),
+                                  child: Text('Close'),
                                   onPressed: () {
                                     Navigator.of(context)
                                         .pop(); // Закрывает диалог
@@ -242,7 +270,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                           },
                         );
                       },
-                      child: Text('Показать диалог'),
+                      child: Text('Add specs'),
                     ),
                     Center(
                       child: ElevatedButton(

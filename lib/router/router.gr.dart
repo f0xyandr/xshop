@@ -171,13 +171,13 @@ class ProductDeleteRoute extends PageRouteInfo<void> {
 class ProductRoute extends PageRouteInfo<ProductRouteArgs> {
   ProductRoute({
     Key? key,
-    required int categoryId,
+    required ProductCategory category,
     List<PageRouteInfo>? children,
   }) : super(
           ProductRoute.name,
           args: ProductRouteArgs(
             key: key,
-            categoryId: categoryId,
+            categoryId: category,
           ),
           initialChildren: children,
         );
@@ -190,7 +190,7 @@ class ProductRoute extends PageRouteInfo<ProductRouteArgs> {
       final args = data.argsAs<ProductRouteArgs>();
       return ProductScreen(
         key: args.key,
-        categoryId: args.categoryId,
+        category: args.categoryId,
       );
     },
   );
@@ -204,7 +204,7 @@ class ProductRouteArgs {
 
   final Key? key;
 
-  final int categoryId;
+  final ProductCategory categoryId;
 
   @override
   String toString() {
