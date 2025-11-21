@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:xshop/features/auth/data/entities/user_entity.dart';
 import 'package:xshop/features/auth/domain/models/user_model.dart';
+import 'package:xshop/features/auth/infrastructure/service/service.dart';
 
 class AuthRemoteDataControl {
   final Dio dio;
@@ -10,11 +13,13 @@ class AuthRemoteDataControl {
   Future<void> login({email, password}) async {
     try {
       Map<String, dynamic> params = {"email": email, "password": password};
+
       final res = await dio.post("$_path/auth/login", data: params);
-      Map<String, dynamic> resData = res.data['user'];
-      debugPrint(resData.toString());
-      final user = UserModel.fromJson(resData);
-      debugPrint(user.toString());
+      Map<String, dynamic> userJson = res.data['user'];
+
+      debugPrint(userJson.toString());
+
+      GetIt.I.get<AuthService>().login(userJson['id']);
     } catch (e, st) {
       debugPrint("Error or Exception is $e\nStacktrace:\n$st");
     }
@@ -27,7 +32,12 @@ class AuthRemoteDataControl {
         "password": password,
         "username": username,
       };
-      await dio.post("$_path" + "/auth/register", data: params);
+      final res = await dio.post("$_path" + "/auth/register", data: params);
+      Map<String, dynamic> userJson = res.data['user'];
+
+      debugPrint(userJson.toString());
+
+      GetIt.I.get<AuthService>().login(userJson['id']);
     } catch (e, st) {
       debugPrint("Error or Exception is $e\nStacktrace:\n$st");
     }

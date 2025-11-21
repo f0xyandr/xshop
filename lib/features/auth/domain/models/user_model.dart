@@ -1,18 +1,21 @@
 import 'package:xshop/features/auth/data/entities/user_entity.dart';
 
 class UserModel extends UserEntity {
-  UserModel();
+  UserModel({required super.id, required super.email, required super.username});
 
-  factory UserModel.fromJson(json) => UserModel()
-    ..id = json["id"]
-    ..email = json["email"]
-    ..phone = json["phone"]
-    ..avatar_url = json["avatar_url"]
-    ..bio = json["bio"]
-    ..created_at = json["created_at"]
-    ..settings = json["settings"]
-    ..last_login = json["last_login"]
-    ..emailConfirmed = false;
+  factory UserModel.fromEntity({required UserEntity userEntity}) =>
+      UserModel(
+          id: userEntity.id,
+          email: userEntity.email,
+          username: userEntity.username,
+        )
+        ..phone = userEntity.phone
+        ..avatar_url = userEntity.avatar_url
+        ..bio = userEntity.bio
+        ..created_at = userEntity.created_at
+        ..settings = userEntity.settings
+        ..last_login = userEntity.last_login
+        ..emailConfirmed = false;
 
   @override
   String toString() {

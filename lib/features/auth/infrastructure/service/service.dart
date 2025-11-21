@@ -1,14 +1,18 @@
 class AuthService {
   AuthService._();
-  String? user;
+  String? userId;
 
   static AuthService _instance = AuthService._();
 
   factory AuthService() => _instance;
 
-  void login(user) {
-    this.user = user;
+  void login(String userId) {
+    this.userId = userId;
   }
 
-  bool get isLoggedIn => user != null;
+  void unLogin(String userId) {
+    this.userId = null;
+  }
+
+  bool get isLoggedIn => userId != null;
 }

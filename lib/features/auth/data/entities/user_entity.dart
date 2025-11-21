@@ -1,9 +1,9 @@
 import 'package:xshop/features/auth/domain/models/user_model.dart';
 
 class UserEntity {
-  String? id;
-  String? email;
-  String? username;
+  String id;
+  String email;
+  String username;
   String? phone;
   String? avatar_url;
   String? bio;
@@ -11,15 +11,21 @@ class UserEntity {
   String? last_login;
   Map? settings;
   bool? emailConfirmed;
-  UserEntity();
-}
+  UserEntity({
+    required this.id,
+    required this.email,
+    required this.username,
+    this.phone,
+    this.avatar_url,
+    this.bio,
+    this.created_at,
+    this.last_login,
+    this.emailConfirmed,
+    this.settings,
+  });
 
-UserModel toModel(UserEntity userEntity) => UserModel()
-  ..email = userEntity.email
-  ..phone = userEntity.phone
-  ..avatar_url = userEntity.avatar_url
-  ..bio = userEntity.bio
-  ..created_at = userEntity.created_at
-  ..settings = userEntity.settings
-  ..last_login = userEntity.last_login
-  ..emailConfirmed = false;
+  @override
+  String toString() {
+    return 'UserModel of user $username:\n{uid: $id,\nemail: $email,\nphone: $phone,\nemailConfirmed: $emailConfirmed}\n';
+  }
+}
