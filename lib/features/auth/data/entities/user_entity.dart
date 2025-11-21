@@ -1,7 +1,7 @@
 import 'package:xshop/features/auth/domain/models/user_model.dart';
 
 class UserEntity {
-  String? uid;
+  String? id;
   String? email;
   String? username;
   String? phone;
@@ -15,7 +15,6 @@ class UserEntity {
 }
 
 UserModel toModel(UserEntity userEntity) => UserModel()
-  ..uid = userEntity.uid
   ..email = userEntity.email
   ..phone = userEntity.phone
   ..avatar_url = userEntity.avatar_url

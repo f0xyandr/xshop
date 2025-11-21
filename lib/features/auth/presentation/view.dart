@@ -1,8 +1,8 @@
-// ignore_for_file: unused_local_variable, use_build_context_synchronously
-
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
-import '../../../router/router.dart';
+import 'package:xshop/features/auth/domain/repository/repo_interface.dart';
+import 'package:xshop/features/auth/domain/usecases/user_usecase.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -12,12 +12,28 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  final email = TextEditingController(text: "admin@admin.com");
-  final password = TextEditingController(text: "admin");
+  final username = TextEditingController(text: "testtest");
+  final email = TextEditingController(text: "test");
+  final password = TextEditingController(text: "mypwd123");
+  bool isRegister = false;
+
+  @override
+  dispose() {
+    username.dispose();
+    email.dispose();
+    password.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    final AuthAbstractRepository repo = GetIt.I.get<AuthAbstractRepository>();
+
+    final useCase = isRegister
+        ? RegisterUsecase(authRepository: repo)
+        : LoginUsecase(authRepository: repo);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -53,9 +69,22 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 32.0),
+                  const SizedBox(height: 16.0),
+                  isRegister
+                      ? TextField(
+                          controller: username,
+                          decoration: InputDecoration(
+                            labelText: "Username",
+                            prefixIcon: const Icon(Icons.email_outlined),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                        )
+                      : const SizedBox(height: 1),
                 ],
               ),
+              const SizedBox(height: 16.0),
 
               // Поле ввода email
               TextField(
@@ -89,27 +118,45 @@ class _AuthScreenState extends State<AuthScreen> {
 
               // Кнопка "Войти"
               ElevatedButton(
-                onPressed: () async {},
+                onPressed: () {
+                  if (useCase is RegisterUsecase) {
+                    useCase.call(
+                      username: username.text,
+                      email: email.text,
+                      password: password.text,
+                    );
+                  }
+                  if (useCase is LoginUsecase) {
+                    useCase.call(email: email.text, password: password.text);
+                  }
+                },
+
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
-                child: const Text("Войти"),
+                child: isRegister
+                    ? const Text("Зарегестрироваться")
+                    : const Text("Войти"),
               ),
               const SizedBox(height: 16.0),
 
               // Кнопка "Зарегистрироваться"
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  setState(() => isRegister = !isRegister);
+                },
                 style: TextButton.styleFrom(
                   textStyle: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: theme.primaryColor,
                   ),
                 ),
-                child: const Text("Зарегистрироваться"),
+                child: isRegister
+                    ? const Text("Войти")
+                    : const Text("Зарегистрироваться"),
               ),
               const SizedBox(height: 32.0),
             ],

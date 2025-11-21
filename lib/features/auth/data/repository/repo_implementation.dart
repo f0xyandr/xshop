@@ -1,26 +1,22 @@
 import 'package:xshop/features/auth/data/remote_control/remote_data_control.dart';
-import 'package:xshop/features/auth/domain/models/user_model.dart';
 
 import '../../domain/repository/repo_interface.dart';
 
-class RepoImplementation implements AbstractRepository {
-  final RemoteDataControl dataController;
-  RepoImplementation({required this.dataController});
+class AuthRepoImplementation implements AuthAbstractRepository {
+  final AuthRemoteDataControl dataController;
+  AuthRepoImplementation({required this.dataController});
 
   @override
-  Future<UserModel?> login({email, phone, username, password}) async {
-    UserModel? result = await dataController.login(
-      email: email,
-      phone: phone,
-      username: username,
-      password: password,
-    );
-    return result;
+  Future<void> login({email, password}) async {
+    await dataController.login(email: email, password: password);
   }
 
   @override
-  Future<UserModel?> registration({email, username, password}) async {
-    // TODO: implement registration
-    throw UnimplementedError();
+  Future<void> register({username, email, password}) async {
+    await dataController.register(
+      username: username,
+      email: email,
+      password: password,
+    );
   }
 }
