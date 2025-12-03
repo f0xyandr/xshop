@@ -1,20 +1,16 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:xshop/features/auth/data/entities/user_entity.dart';
-import 'package:xshop/features/auth/domain/models/user_model.dart';
 import 'package:xshop/features/auth/infrastructure/service/service.dart';
+import 'package:xshop/interfaces/remote_data_control_base.dart';
 
-class AuthRemoteDataControl {
-  final Dio dio;
-  AuthRemoteDataControl({required this.dio});
-  final String _path = "http://10.182.170.238:3000/api";
+class AuthRemoteDataControl extends RemoteDataControlBase {
+  AuthRemoteDataControl({required super.dio});
 
   Future<void> login({email, password}) async {
     try {
       Map<String, dynamic> params = {"email": email, "password": password};
 
-      final res = await dio.post("$_path/auth/login", data: params);
+      final res = await dio.post("$path/auth/login", data: params);
       Map<String, dynamic> userJson = res.data['user'];
 
       debugPrint(userJson.toString());
@@ -32,7 +28,7 @@ class AuthRemoteDataControl {
         "password": password,
         "username": username,
       };
-      final res = await dio.post("$_path" + "/auth/register", data: params);
+      final res = await dio.post("$path/auth/register", data: params);
       Map<String, dynamic> userJson = res.data['user'];
 
       debugPrint(userJson.toString());

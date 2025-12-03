@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:xshop/features/auth/domain/repository/repo_interface.dart';
 import 'package:xshop/features/auth/domain/usecases/user_usecase.dart';
+import 'package:xshop/features/product_list/presentation/home_screen.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -17,13 +18,13 @@ class _AuthScreenState extends State<AuthScreen> {
   final password = TextEditingController(text: "mypwd123");
   bool isRegister = false;
 
-  @override
-  dispose() {
-    username.dispose();
-    email.dispose();
-    password.dispose();
-    super.dispose();
-  }
+  // @override
+  // dispose() {
+  //   username.dispose();
+  //   email.dispose();
+  //   password.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -129,6 +130,10 @@ class _AuthScreenState extends State<AuthScreen> {
                   if (useCase is LoginUsecase) {
                     useCase.call(email: email.text, password: password.text);
                   }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                  );
                 },
 
                 style: ElevatedButton.styleFrom(

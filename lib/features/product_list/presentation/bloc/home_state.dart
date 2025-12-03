@@ -4,7 +4,7 @@ class HomeState {}
 
 class HomeLoaded extends HomeState {
   HomeLoaded(this.randomProducts);
-  final List<Product> randomProducts;
+  final List<ProductListModel>? randomProducts;
 }
 
 class HomeLoading extends HomeState {}

@@ -9,6 +9,6 @@ class ProductListAbstractRepositoryImpl
   ProductListAbstractRepositoryImpl({required this.dataController});
 
   @override
-  Future<ProductListEntity?> fetchRandomProducts() async =>
+  Future<List<ProductListModel>?> fetchRandomProducts() async =>
       await dataController.fetchRandomProducts();
 }
