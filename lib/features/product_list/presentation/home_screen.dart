@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:get_it/get_it.dart';
-import 'package:xshop/features/product_list/domain/repository/product_list_abstract_repo.dart';
+import 'package:xshop/domain/repository/product_abstract_repo.dart';
+import 'package:xshop/features/product_card/presentation/view.dart';
 import 'package:xshop/features/product_list/presentation/bloc/home_bloc.dart';
 import 'package:xshop/features/product_list/presentation/widgets/product_tile.dart';
 
@@ -17,20 +18,20 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final HomeBloc _homeBloc;
+  int currentPageIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    debugPrint("INITSTATED");
-    _homeBloc = HomeBloc(GetIt.I<ProductListAbstractRepository>())
+    debugPrint("HOME SCREEN INITSTATED");
+    _homeBloc = HomeBloc(GetIt.I<ProductAbstractRepository>())
       ..add(LoadHomeProducts());
   }
 
   @override
   void dispose() {
     _homeBloc.close();
-    debugPrint("DISPOSED");
-
+    debugPrint("HOME SCREEN DISPOSED");
     super.dispose();
   }
 
@@ -81,7 +82,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount: products?.length,
                     itemBuilder: (context, index) {
                       final product = products?[index];
-                      return ProductTile(product: product!);
+                      return ProductTile(
+                        product: product!,
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ProductCardScreen(
+                              productId: product.id,
+                              title: product.title,
+                            ),
+                          ),
+                        ),
+                      );
                     },
                   );
                 }
@@ -98,17 +109,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Shop App'),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.shopping_cart_outlined),
-          ),
-        ],
-      ),
-      body: _buildHomeContent(),
-    );
+    return _buildHomeContent();
   }
 }

@@ -10,7 +10,7 @@ class XShopApp extends StatelessWidget {
     return MaterialApp(
       title: 'Online Shop',
       theme: darkTheme,
-      home: const AuthScreen(),
+      home: AuthScreen(),
     );
   }
 }
